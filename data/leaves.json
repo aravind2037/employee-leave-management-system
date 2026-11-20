@@ -1,0 +1,10 @@
+[
+    {
+        "employee_id": "0123",
+        "employee_name": "Aravind",
+        "start_date": "2026-11-12",
+        "end_date": "2026-11-15",
+        "leave_days": 4,
+        "status": "Submitted"
+    }
+]
