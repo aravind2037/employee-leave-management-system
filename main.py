@@ -53,13 +53,19 @@ def apply_leave():
 
     leaves = load_leaves()
 
+    # Determine leave approval status
+    if leave_days > 5:
+        status = "Pending Manager Approval"
+    else:
+        status = "Approved"
+
     leave_request = {
         "employee_id": employee_id,
         "employee_name": employee_name,
         "start_date": start_date.strftime("%Y-%m-%d"),
         "end_date": end_date.strftime("%Y-%m-%d"),
         "leave_days": leave_days,
-        "status": "Submitted"
+        "status": status
     }
 
     leaves.append(leave_request)
@@ -67,6 +73,7 @@ def apply_leave():
 
     print("\nLeave request submitted successfully!")
     print("Total Leave Days:", leave_days)
+    print("Leave Status:", status)
 
 
 def view_leaves():
@@ -90,12 +97,71 @@ def view_leaves():
         print("Status:", leave["status"])
 
 
+
+def manager_approval():
+    """Allow manager to approve or reject pending requests."""
+
+    leaves = load_leaves()
+
+    pending_leaves = [
+        leave for leave in leaves
+        if leave["status"] == "Pending Manager Approval"
+    ]
+
+    if not pending_leaves:
+        print("\nNo pending leave requests.")
+        return
+
+    print("\n----- Pending Leave Requests -----")
+
+    for index, leave in enumerate(pending_leaves):
+        print(f"\nRequest {index + 1}")
+        print("Employee:", leave["employee_name"])
+        print("Leave Days:", leave["leave_days"])
+        print("Dates:", leave["start_date"], "to", leave["end_date"])
+
+    try:
+        choice = int(input("\nEnter request number to review: "))
+
+        if choice < 1 or choice > len(pending_leaves):
+            print("Invalid request number.")
+            return
+
+    except ValueError:
+        print("Please enter a valid number.")
+        return
+
+    selected_leave = pending_leaves[choice - 1]
+
+    print("\n1. Approve")
+    print("2. Reject")
+
+    decision = input("Enter your decision: ")
+
+    if decision == "1":
+        selected_leave["status"] = "Approved"
+        print("Leave request approved!")
+
+    elif decision == "2":
+        selected_leave["status"] = "Rejected"
+        print("Leave request rejected!")
+
+    else:
+        print("Invalid decision.")
+        return
+
+    save_leaves(leaves)
+
+
+
+
 def main():
     while True:
         print("\n===== Employee Leave Management System =====")
         print("1. Apply for Leave")
         print("2. View Leave Requests")
-        print("3. Exit")
+        print("3. Manager Approval")
+        print("4. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -106,12 +172,16 @@ def main():
             view_leaves()
 
         elif choice == "3":
+            manager_approval()
+
+        elif choice == "4":
             print("Thank you for using the system!")
             break
 
         else:
             print("Invalid choice. Please try again.")
 
+            
 
 if __name__ == "__main__":
     main()
