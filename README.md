@@ -32,3 +32,6 @@ employee-leave-management-system/
 - README.md
 - requirements.txt
 - data/
+
+
+Project status: Successfully uploaded to GitHub.
