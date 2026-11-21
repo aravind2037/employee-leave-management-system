@@ -5,4 +5,4 @@ venv/
 .env
 .vscode/
 .idea/
-data/leaves.jsongit add .gitignoregit add .gitignore
+data/leaves.json
